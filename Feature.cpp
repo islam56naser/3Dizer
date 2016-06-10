@@ -252,37 +252,6 @@ namespace reconstruct3D{
 	}
 
 
-	//void Feature::sfmBFMatcher(vector<ImageContainer>& imgCont, vector<vector<DMatch>>& goodMatchesM, double ratio, bool showMatches){
-
-	//	BFMatcher matcher;
-	//	size_t nImages = imgCont.size();
-	//	assert(nImages > 1);
-	//	for (size_t m = 1; m < nImages; m++)
-	//	{
-	//		vector<vector<DMatch>> matches;
-	//		vector<DMatch>goodMatches;
-	//		matcher.knnMatch(imgCont[m].descriptor, imgCont[m - 1].descriptor, matches, 2);
-	//		for (size_t i = 0; i < matches.size(); i++)
-	//		{
-	//			if (matches[i][0].distance < ratio * matches[i][1].distance)
-	//			{
-	//				goodMatches.push_back(matches[i][0]);
-	//			}
-
-	//		}
-	//		goodMatchesM.push_back(goodMatches);
-	//		if (showMatches)
-	//		{
-	//			Mat img_matches;
-	//			drawMatches(imgCont[m].grayImage, imgCont[m].imgKeys, imgCont[m - 1].grayImage, imgCont[m - 1].imgKeys, goodMatches, img_matches);
-	//			imshow("Matches", img_matches);
-	//			waitKey(0);
-	//		}
-
-
-	//	}
-	//}
-
 	void Feature::sfmBFMatcher(vector<ImageContainer>& imgCont, vector<vector<DMatch>>& goodMatchesM
 		, double distance, bool crossCheck, bool binary, bool showMatches){
 		size_t nImages = imgCont.size();
