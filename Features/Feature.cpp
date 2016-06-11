@@ -252,6 +252,7 @@ namespace reconstruct3D{
 	}
 
 
+
 	void Feature::sfmBFMatcher(vector<ImageContainer>& imgCont, vector<vector<DMatch>>& goodMatchesM
 		, double distance, bool crossCheck, bool binary, bool showMatches){
 		size_t nImages = imgCont.size();
