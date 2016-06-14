@@ -17,17 +17,15 @@ namespace reconstruct3D{
 		static void sfmDetectFeatures(vector<ImageContainer>& imgConts, const String& detectorType);
 		static void sfmComputeFeatures(vector<ImageContainer>& imgCont, const String& descripType);
 
-		static void sfmComputeFeatures(vector<Mat>& images, vector<vector<KeyPoint>>& keys, vector<Mat>& descriptors, const String& descripType);
-
 		static void sfmFlannMatcher(vector<ImageContainer>& imgCont, vector<vector<DMatch>>& goodMatchesM,
 			double distance, size_t nMatches, bool showMatches);
+
+
 		static void sfmBFMatcher(vector<ImageContainer>& imgCont, vector<vector<DMatch>>& goodMatchesM, double ratio, double distance, bool showMatches);
 
-		static void sfmBFMatcher(vector<ImageContainer>& imgCont, vector<vector<DMatch>>& goodMatchesM,
-			double distance, bool crossCheck, bool binary, bool showMatches);
+		static void sfmBFMatcher(vector<ImageContainer>& imgCont, vector<vector<DMatch>>& goodMatchesM,double distance, bool binary, bool showMatches);
 
-		static void sfmBFMatcher(vector<Mat>& images,vector<vector<KeyPoint>>& keys,vector<Mat>& descriptors, vector<vector<DMatch>>& goodMatchesM
-			, double distance, bool crossCheck, bool binary, bool showMatches);
+	
 
 
 
