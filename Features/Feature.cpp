@@ -35,13 +35,6 @@ namespace reconstruct3D{
 
 	}
 
-
-
-
-
-
-
-
 	void Feature::sfmComputeFeatures(vector<ImageContainer>& imgCont, const String& descripType){
 		assert(descripType == "SURF" || descripType == "SIFT" || descripType == "FREAK");
 
@@ -77,107 +70,6 @@ namespace reconstruct3D{
 			
 		}
 		
-	}
-	void Feature::sfmComputeFeatures(vector<Mat>& images, vector<vector<KeyPoint>>& keys, vector<Mat>& descriptors, const String& descripType){
-		assert(descripType == "SURF" || descripType == "SIFT" || descripType == "FREAK");
-
-		if (descripType == "SURF"){
-			Ptr<SURF> extractor = SURF::create();
-			extractor->compute(images,keys, descriptors);
-
-
-		}
-		else if (descripType == "SIFT")
-		{
-			Ptr<SIFT> extractor = SIFT::create();
-			extractor->compute(images, keys, descriptors);
-
-		}
-		else if (descripType == "FREAK")
-		{
-			Ptr<FREAK> extractor = FREAK::create();
-			extractor->compute(images, keys, descriptors);
-
-		}
-
-	}
-
-	void Feature::sfmBFMatcher(vector<Mat>& images, vector<vector<KeyPoint>>& keys, vector<Mat>& descriptors, vector<vector<DMatch>>& goodMatchesM
-		, double distance, bool crossCheck, bool binary, bool showMatches){
-		size_t nImages = images.size();
-		assert(nImages > 1);
-		if (!binary)
-		{
-			BFMatcher matcher(NORM_L2, crossCheck);
-			goodMatchesM.resize(nImages - 1);
-			
-			for (size_t i = 1; i < nImages; i++)
-			{
-				vector<DMatch> matches;
-				matcher.match(descriptors[i], descriptors[i - 1], matches);
-				for (size_t j = 0; j < matches.size(); j++)
-				{
-
-					Point2f to = keys[i][matches[j].queryIdx].pt;
-					Point2f from = keys[i - 1][matches[j].trainIdx].pt;
-					if (norm(to-from) < distance)
-					{
-						goodMatchesM[i - 1].push_back(matches[j]);
-
-					}
-
-				}
-
-
-				if (showMatches)
-				{
-					Mat img_matches;
-					drawMatches(images[i], keys[i], images[i - 1], keys[i - 1], goodMatchesM[i - 1], img_matches);
-					imshow("Matches", img_matches);
-					waitKey(0);
-				}
-			}
-
-
-		}
-		else
-		{
-			
-
-			BFMatcher matcher(NORM_HAMMING2, crossCheck);
-			goodMatchesM.resize(nImages - 1);
-			for (size_t i = 1; i < nImages; i++)
-			{
-				vector<DMatch> matches;
-				matcher.match(descriptors[i], descriptors[i-1], matches);
-				for (size_t j = 0; j < matches.size(); j++)
-				{
-
-					Point2f to = keys[i][matches[j].queryIdx].pt;
-					Point2f from = keys[i - 1][matches[j].trainIdx].pt;
-					if (norm(to-from))
-					{
-						goodMatchesM[i - 1].push_back(matches[j]);
-
-					}
-
-				}
-
-
-				if (showMatches)
-				{
-					Mat img_matches;
-					drawMatches(images[i], keys[i], images[i - 1], keys[i - 1], goodMatchesM[i - 1], img_matches);
-					imshow("Matches", img_matches);
-					waitKey(0);
-				}
-			}
-
-
-		}
-
-
-
 	}
 
 
@@ -217,9 +109,6 @@ namespace reconstruct3D{
 	}
 
 
-
-
-
 	void Feature::sfmBFMatcher(vector<ImageContainer>& imgCont, vector<vector<DMatch>>& goodMatchesM, double ratio, double distance, bool showMatches){
 		BFMatcher matcher;
 		size_t nImages = imgCont.size();
@@ -231,7 +120,7 @@ namespace reconstruct3D{
 			matcher.knnMatch(imgCont[m].descriptor, imgCont[m - 1].descriptor, matches, 2);
 			for (size_t i = 0; i < matches.size(); i++)
 			{
-				Point2f to = imgCont[m].imgKeys[matches[i][1].queryIdx].pt;
+				Point2f to = imgCont[m].imgKeys[matches[i][0].queryIdx].pt;
 				Point2f from = imgCont[m - 1].imgKeys[matches[i][0].trainIdx].pt;
 				if (matches[i][0].distance < ratio * matches[i][1].distance && norm(to - from) < distance)
 				{
@@ -254,12 +143,12 @@ namespace reconstruct3D{
 
 
 	void Feature::sfmBFMatcher(vector<ImageContainer>& imgCont, vector<vector<DMatch>>& goodMatchesM
-		, double distance, bool crossCheck, bool binary, bool showMatches){
+		, double distance, bool binary, bool showMatches){
 		size_t nImages = imgCont.size();
 		assert(nImages > 1);		
 		if (!binary)
 		{
-			BFMatcher matcher(NORM_L2, crossCheck);
+			BFMatcher matcher(NORM_L2, true);
 			goodMatchesM.resize(nImages - 1);
 			for (size_t i = 1; i < nImages; i++)
 			{
@@ -292,7 +181,7 @@ namespace reconstruct3D{
 		}
 		else
 		{
-			BFMatcher matcher(NORM_HAMMING2, crossCheck);
+			BFMatcher matcher(NORM_HAMMING2, true);
 			goodMatchesM.resize(nImages - 1);
 			for (size_t i = 1; i < nImages; i++)
 			{
